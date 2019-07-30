@@ -1,6 +1,7 @@
 package com.sputnikmessenger.sputnik_audio_recorder
 
 import android.media.MediaRecorder
+import android.os.Build
 import android.util.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -108,26 +109,31 @@ class SputnikAudioRecorderPlugin : MethodCallHandler {
     }
 
     private fun pauseRecording(call: MethodCall, result: Result) {
-        Log.d("audio", "pause");
-        val handle = handleFrom(call);
-        val recorder = mediaRecorder[handle];
-        if (recorder != null) {
-            recorder.pause();
-            result.success(handle)
-        } else {
-            result.error("handle_not_found", "recorder to pause with handle $handle not found", null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Log.d("audio", "pause");
+
+            val handle = handleFrom(call);
+            val recorder = mediaRecorder[handle];
+            if (recorder != null) {
+                recorder.pause();
+                result.success(handle)
+            } else {
+                result.error("handle_not_found", "recorder to pause with handle $handle not found", null);
+            }
         }
     }
 
     private fun resumeRecording(call: MethodCall, result: Result) {
-        Log.d("audio", "resume");
-        val handle = handleFrom(call);
-        val recorder = mediaRecorder[handle];
-        if (recorder != null) {
-            recorder.resume()
-            result.success(handle)
-        } else {
-            result.error("handle_not_found", "recorder to resume with handle $handle not found", null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Log.d("audio", "resume");
+            val handle = handleFrom(call);
+            val recorder = mediaRecorder[handle];
+            if (recorder != null) {
+                recorder.resume()
+                result.success(handle)
+            } else {
+                result.error("handle_not_found", "recorder to resume with handle $handle not found", null);
+            }
         }
     }
 
